@@ -107,9 +107,9 @@ CELERY_BEAT_SCHEDULE = {
         'task': 'cargo.tasks.send_pending_enquiry_notifications',
         'schedule': timedelta(hours=1),  # Run every hour
     },
-    'delete_old_pending_enquiries': {
+    'delete-old-pending-enquiries': {
         'task': 'cargo.tasks.delete_old_pending_enquiries',
-        'schedule': timedelta(hours=1),  # Run every hour
+        'schedule': timedelta(minutes=3),  # Run every 3 minutes
     },
 }
 

@@ -3,6 +3,7 @@
 from celery import shared_task
 from django.utils import timezone
 from cargo.models import Enquiry
+from datetime import timedelta
 
 @shared_task
 def send_pending_enquiry_notifications():
@@ -18,7 +19,8 @@ def delete_old_pending_enquiries():
     pending_enquiries = Enquiry.objects.filter(status='pending')
     for enquiry in pending_enquiries:
         created_time = enquiry.created_at
-        if (timezone.now() - created_time).total_seconds() >= 48 * 60 * 60:
+        # if (timezone.now() - created_time).total_seconds() >= 48 * 60 * 60:
+        if (timezone.now() - created_time) >= timedelta(minutes=3):
             # Delete the enquiry
             enquiry.delete()
             print(f"Deleted old pending enquiry #{enquiry.id}")
