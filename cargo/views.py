@@ -3,6 +3,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
+from django.http import JsonResponse
+from cargo.models import Notification
 
 class LoginView(APIView):
     def post(self, request):
@@ -21,4 +23,14 @@ class LoginView(APIView):
             }, status=status.HTTP_200_OK)
         else:
             return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+        
+
+
+def get_notifications(request):
+    user = request.user  # Assuming user is authenticated
+    notifications = Notification.objects.filter(user=user, read=False)
+    data = [{'id': n.id, 'message': n.message, 'created_at': n.created_at} for n in notifications]
+    # Mark notifications as read
+    notifications.update(read=True)
+    return JsonResponse({'notifications': data})
 

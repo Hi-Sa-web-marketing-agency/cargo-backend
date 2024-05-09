@@ -105,7 +105,7 @@ CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
 CELERY_BEAT_SCHEDULE = {
     'send_pending_enquiry_notifications': {
         'task': 'cargo.tasks.send_pending_enquiry_notifications',
-        'schedule': timedelta(hours=1),  # Run every hour
+        'schedule': timedelta(minutes=2),  # Run every hour
     },
     'delete-old-pending-enquiries': {
         'task': 'cargo.tasks.delete_old_pending_enquiries',
