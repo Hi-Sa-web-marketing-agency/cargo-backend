@@ -27,8 +27,8 @@ class LoginView(APIView):
 
 
 def get_notifications(request):
-    user = request.user  # Assuming user is authenticated
-    notifications = Notification.objects.filter(user=user, read=False)
+    # user = request.user  # Assuming user is authenticated
+    notifications = Notification.objects.all()
     data = [{'id': n.id, 'message': n.message, 'created_at': n.created_at} for n in notifications]
     # Mark notifications as read
     notifications.update(read=True)
