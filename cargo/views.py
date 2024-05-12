@@ -4,9 +4,12 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 from django.http import JsonResponse
-from cargo.models import Notification,Enquiry
+from cargo.models import Notification,Enquiry,CustomUser
 from .serializers import EnquirySerializer
 from django.views.decorators.csrf import csrf_exempt
+from django.utils import timezone
+from django.conf import settings
+from datetime import datetime
 
 
 class LoginView(APIView):
@@ -40,11 +43,66 @@ def get_notifications(request):
 
 @csrf_exempt 
 def Enquiry_post(request):
-    serializer = EnquirySerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()  # This will set the default status as 'pending'
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    if request.method == 'POST':
+        # Extract data from the query parameters (GET request)
+        data = request.GET  # This extracts data from the query parameters
+
+        print(settings.AUTH_USER_MODEL,'---------------------this is usermode---------------------------')
+
+        # Check if required fields are present
+        required_fields = ['name', 'place']
+        for field in required_fields:
+            if field not in data:
+                return JsonResponse({'error': f'Required field "{field}" is missing'}, status=400)
+
+        # Parse data and create Enquiry instance
+        name = data.get('name')
+        place = data.get('place')
+        pickup_date_str = data.get('pickup_date')
+        pickup_time = data.get('pickup_time')
+        phone = data.get('phone')
+        mode = data.get('mode')
+        driver = data.get('driver')
+        salesman_id = data.get('salesman_id')
+        print(salesman_id,'--------------------this is salesman id---------------')
+        status = data.get('status', 'pending')  # Default to 'pending' if not provided
+
+        try:
+            pickup_date = datetime.strptime(pickup_date_str, '%Y-%m-%d').date() if pickup_date_str else None
+        except ValueError:
+            return JsonResponse({'error': 'Invalid pickup_date format'}, status=400)
+
+        if salesman_id:
+            try:
+                salesman = CustomUser.objects.get(id=salesman_id)
+            except:
+                return JsonResponse({'error': 'Salesman not found'}, status=400)
+        else:
+                salesman = None
+
+
+        # Create Enquiry instance
+        enquiry = Enquiry(
+            name=name,
+            place=place,
+            pickup_date=pickup_date,  # Ensure pickup_date is provided
+            pickup_time=pickup_time,
+            phone=phone,
+            mode=mode,
+            driver=driver,
+            salesman=salesman,
+            status=status,
+            created_at=timezone.now()
+        )
+
+        # Save the Enquiry instance
+        enquiry.save()
+
+        # Return a JSON response with the created enquiry details
+        return JsonResponse({'message': 'Enquiry created successfully', 'enquiry_id': enquiry.id}, status=201)
+
+    else:
+        return JsonResponse({'error': 'Method not allowed'}, status=405)
 
 def Enquiry_get(request,pk):
     try:
