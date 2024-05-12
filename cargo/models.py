@@ -15,16 +15,16 @@ class CustomUser(AbstractUser):
 
 
 class Enquiry(models.Model):
-    name = models.CharField(max_length=100)
-    place = models.CharField(max_length=255)
-    pickup_date = models.DateField()
+    name = models.CharField(max_length=100,null=True)
+    place = models.CharField(max_length=255,null=True)
+    pickup_date = models.DateField(null=True)
     pickup_time = models.CharField(max_length=100,null=True)
-    phone = models.CharField(max_length=20)
+    phone = models.CharField(max_length=20,null=True)
     mode = models.CharField(max_length=200,null=True)
     driver = models.CharField(max_length=100, blank=True, null=True)
     salesman = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,null=True)
-    status = models.CharField(max_length=20, default='pending')
-    created_at = models.DateTimeField(default=timezone.now)
+    status = models.CharField(max_length=20, default='pending',null=True)
+    created_at = models.DateTimeField(default=timezone.now,null=True)
 
     def __str__(self):
         return f"Enquiry #{self.id} - {self.name}"
