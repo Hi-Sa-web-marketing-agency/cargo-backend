@@ -15,8 +15,8 @@ class CustomUser(AbstractUser):
 
 
 class Enquiry(models.Model):
-    name = models.CharField(max_length=100,null=True)
-    place = models.CharField(max_length=255,null=True)
+    name = models.CharField(max_length=100)
+    place = models.CharField(max_length=255)
     pickup_date = models.DateField(null=True)
     pickup_time = models.CharField(max_length=100,null=True)
     phone = models.CharField(max_length=20,null=True)

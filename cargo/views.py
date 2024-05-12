@@ -6,6 +6,8 @@ from django.contrib.auth import authenticate
 from django.http import JsonResponse
 from cargo.models import Notification,Enquiry
 from .serializers import EnquirySerializer
+from django.views.decorators.csrf import csrf_exempt
+
 
 class LoginView(APIView):
     def post(self, request):
@@ -36,34 +38,34 @@ def get_notifications(request):
     notifications.update(read=True)
     return JsonResponse({'notifications': data})
 
-class EnquiryAPIView(APIView):
-    def post(self, request, format=None):
-        serializer = EnquirySerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()  # This will set the default status as 'pending'
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+@csrf_exempt 
+def Enquiry_post(request):
+    serializer = EnquirySerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()  # This will set the default status as 'pending'
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def get(self, request, pk, format=None):
-        try:
-            enquiry = Enquiry.objects.get(pk=pk)
-        except Enquiry.DoesNotExist:
-            return Response({'error': 'Enquiry not found'}, status=status.HTTP_404_NOT_FOUND)
-        
-        serializer = EnquirySerializer(enquiry)
+def Enquiry_get(request,pk):
+    try:
+        enquiry = Enquiry.objects.get(pk=pk)
+    except Enquiry.DoesNotExist:
+        return Response({'error': 'Enquiry not found'}, status=status.HTTP_404_NOT_FOUND)
+    
+    serializer = EnquirySerializer(enquiry)
+    return Response(serializer.data)
+
+def Enquiry_put(request, pk,):
+    try:
+        enquiry = Enquiry.objects.get(pk=pk)
+    except Enquiry.DoesNotExist:
+        return Response({'error': 'Enquiry not found'}, status=status.HTTP_404_NOT_FOUND)
+    
+    serializer = EnquirySerializer(enquiry, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
         return Response(serializer.data)
-
-    def put(self, request, pk, format=None):
-        try:
-            enquiry = Enquiry.objects.get(pk=pk)
-        except Enquiry.DoesNotExist:
-            return Response({'error': 'Enquiry not found'}, status=status.HTTP_404_NOT_FOUND)
-        
-        serializer = EnquirySerializer(enquiry, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 
 def enquiryList(request):
