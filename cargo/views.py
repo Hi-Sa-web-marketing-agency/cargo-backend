@@ -49,12 +49,13 @@ def Enquiry_post(request):
         data = json.loads(request.body) # This extracts data from the query parameters
 
         print(data,'---------------------this is data---------------------------')
+        print(data.name,'---------------------this is name---------------------------')
 
-        # Check if required fields are present
-        required_fields = ['name', 'place']
-        for field in required_fields:
-            if field not in data:
-                return JsonResponse({'error': f'Required field "{field}" is missing'}, status=400)
+        # # Check if required fields are present
+        # required_fields = ['name', 'place']
+        # for field in required_fields:
+        #     if field not in data:
+        #         return JsonResponse({'error': f'Required field "{field}" is missing'}, status=400)
 
         # Parse data and create Enquiry instance
         name = data.name
