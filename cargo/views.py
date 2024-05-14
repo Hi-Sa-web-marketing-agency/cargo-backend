@@ -49,6 +49,7 @@ def Enquiry_post(request):
         data = json.loads(request.body) # This extracts data from the query parameters
 
         print(data,'---------------------this is data---------------------------')
+        print(data,'---------------------this is data---------------------------')
 
         # Check if required fields are present
         required_fields = ['name', 'place']
@@ -69,7 +70,7 @@ def Enquiry_post(request):
         status = data.get('status', 'pending')  # Default to 'pending' if not provided
 
         try:
-            pickup_date = datetime.strptime(pickup_date_str, '%Y-%m-%d').date() if pickup_date_str else None
+            pickup_date = pickup_date_str.split('T')[0]
         except ValueError:
             return JsonResponse({'error': 'Invalid pickup_date format'}, status=400)
 
