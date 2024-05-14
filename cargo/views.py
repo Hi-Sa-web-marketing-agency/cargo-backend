@@ -47,7 +47,7 @@ def Enquiry_post(request):
         # Extract data from the query parameters (GET request)
         data = request.POST  # This extracts data from the query parameters
 
-        print(settings.AUTH_USER_MODEL,'---------------------this is usermode---------------------------')
+        print(data'---------------------this is data---------------------------')
 
         # Check if required fields are present
         required_fields = ['name', 'place']
