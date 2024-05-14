@@ -10,6 +10,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
 from django.conf import settings
 from datetime import datetime
+import json
 
 
 class LoginView(APIView):
@@ -45,7 +46,7 @@ def get_notifications(request):
 def Enquiry_post(request):
     if request.method == 'POST':
         # Extract data from the query parameters (GET request)
-        data = request.POST  # This extracts data from the query parameters
+        data = json.loads(request.body) # This extracts data from the query parameters
 
         print(data,'---------------------this is data---------------------------')
 
