@@ -15,6 +15,15 @@ from datetime import timedelta
 from decouple import config
 import dj_database_url
 
+# Import timezone module
+from django.utils import timezone
+
+# Set the time zone to your desired value
+TIME_ZONE = 'IST'  # Replace 'UTC' with your desired time zone
+
+# Enable Django's timezone support
+USE_TZ = True
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
