@@ -57,16 +57,16 @@ def Enquiry_post(request):
                 return JsonResponse({'error': f'Required field "{field}" is missing'}, status=400)
 
         # Parse data and create Enquiry instance
-        name = data.get('name')
-        place = data.get('place')
-        pickup_date_str = data.get('pickup_date')
-        pickup_time = data.get('pickup_time')
-        phone = data.get('phone')
-        mode = data.get('mode')
-        driver = data.get('driver')
-        salesman_id = data.get('salesman_id')
+        name = data.name
+        place = data.place
+        pickup_date_str = data.pickup_date
+        pickup_time = data.pickup_time
+        phone = data.phone
+        mode = data.mode
+        driver = data.driver
+        salesman_id = data.salesman_id
         print(salesman_id,'--------------------this is salesman id---------------')
-        status = data.get('status', 'pending')  # Default to 'pending' if not provided
+        status = data.status # Default to 'pending' if not provided
 
         try:
             pickup_date = datetime.strptime(pickup_date_str, '%Y-%m-%d').date() if pickup_date_str else None
