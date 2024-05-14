@@ -49,25 +49,24 @@ def Enquiry_post(request):
         data = json.loads(request.body) # This extracts data from the query parameters
 
         print(data,'---------------------this is data---------------------------')
-        print(data.name,'---------------------this is name---------------------------')
 
-        # # Check if required fields are present
-        # required_fields = ['name', 'place']
-        # for field in required_fields:
-        #     if field not in data:
-        #         return JsonResponse({'error': f'Required field "{field}" is missing'}, status=400)
+        # Check if required fields are present
+        required_fields = ['name', 'place']
+        for field in required_fields:
+            if field not in data:
+                return JsonResponse({'error': f'Required field "{field}" is missing'}, status=400)
 
         # Parse data and create Enquiry instance
-        name = data.name
-        place = data.place
-        pickup_date_str = data.pickup_date
-        pickup_time = data.pickup_time
-        phone = data.phone
-        mode = data.mode
-        driver = data.driver
-        salesman_id = data.salesman_id
+        name = data.get('name')
+        place = data.get('place')
+        pickup_date_str = data.get('pickup_date')
+        pickup_time = data.get('pickup_time')
+        phone = data.get('phone')
+        mode = data.get('mode')
+        driver = data.get('driver')
+        salesman_id = data.get('salesman_id')
         print(salesman_id,'--------------------this is salesman id---------------')
-        status = data.status # Default to 'pending' if not provided
+        status = data.get('status', 'pending')  # Default to 'pending' if not provided
 
         try:
             pickup_date = datetime.strptime(pickup_date_str, '%Y-%m-%d').date() if pickup_date_str else None
