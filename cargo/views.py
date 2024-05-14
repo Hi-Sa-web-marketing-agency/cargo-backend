@@ -45,7 +45,7 @@ def get_notifications(request):
 def Enquiry_post(request):
     if request.method == 'POST':
         # Extract data from the query parameters (GET request)
-        data = request.GET  # This extracts data from the query parameters
+        data = request.POST  # This extracts data from the query parameters
 
         print(settings.AUTH_USER_MODEL,'---------------------this is usermode---------------------------')
 
