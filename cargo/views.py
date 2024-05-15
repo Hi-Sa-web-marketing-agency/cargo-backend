@@ -134,7 +134,7 @@ def enquiryList(request):
 
     for enquiry in enquiries:
         # Serialize the salesman field using a nested serializer
-        
+        salesman_data = enquiry.salesman.to_json() if enquiry.salesman else None
         # Construct the enquiry data dictionary
         enquiry_data = {
             'id': enquiry.id,
