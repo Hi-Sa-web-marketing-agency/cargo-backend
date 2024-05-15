@@ -11,7 +11,7 @@ from django.utils import timezone
 from django.conf import settings
 from datetime import datetime
 import json
-
+from django.contrib.auth import get_user_model
 
 class LoginView(APIView):
     def post(self, request):
@@ -130,12 +130,20 @@ def Enquiry_put(request, pk,):
 
 def enquiryList(request):
     enquiries = Enquiry.objects.all()
-    data = []
 
+    data = []
     for enquiry in enquiries:
-        # Serialize the salesman field using a nested serializer
-        salesman_data = enquiry.salesman.to_json() if enquiry.salesman else None
-        # Construct the enquiry data dictionary
+        # Serialize salesman data if available
+        salesman_data = None
+        if enquiry.salesman:
+            salesman_data = {
+                'id': enquiry.salesman.id,
+                'username': enquiry.salesman.username,
+                'email': enquiry.salesman.email,
+                # Add more fields as needed
+            }
+
+        # Construct enquiry data dictionary
         enquiry_data = {
             'id': enquiry.id,
             'name': enquiry.name,
@@ -145,12 +153,11 @@ def enquiryList(request):
             'phone': enquiry.phone,
             'mode': enquiry.mode,
             'driver': enquiry.driver,
-            'salesman': salesman_data ,  # Include serialized salesman data
+            'salesman': salesman_data,
             'status': enquiry.status,
-            'created_at': enquiry.created_at
+            'created_at': enquiry.created_at,
         }
 
         data.append(enquiry_data)
-    print(data)
 
     return JsonResponse({'data': data})
