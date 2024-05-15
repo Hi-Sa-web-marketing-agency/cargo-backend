@@ -145,7 +145,7 @@ def enquiryList(request):
             'phone': enquiry.phone,
             'mode': enquiry.mode,
             'driver': enquiry.driver,
-            'salesman': enquiry.salesman,  # Include serialized salesman data
+            'salesman': salesman_data ,  # Include serialized salesman data
             'status': enquiry.status,
             'created_at': enquiry.created_at
         }
