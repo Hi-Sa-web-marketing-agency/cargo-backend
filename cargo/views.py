@@ -141,6 +141,7 @@ def enquiryList(request):
             'name': enquiry.name,
             'place': enquiry.place,
             'pickup_date': enquiry.pickup_date,
+            'pickup_time': enquiry.pickup_time,
             'phone': enquiry.phone,
             'mode': enquiry.mode,
             'driver': enquiry.driver,
@@ -152,4 +153,4 @@ def enquiryList(request):
         data.append(enquiry_data)
     print(data)
 
-    return JsonResponse({'enquiries': data})
+    return JsonResponse({'data': data})
