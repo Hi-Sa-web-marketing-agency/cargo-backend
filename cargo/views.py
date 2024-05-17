@@ -115,6 +115,7 @@ def Enquiry_get(request,pk):
     serializer = EnquirySerializer(enquiry)
     return Response(serializer.data)
 
+@csrf_exempt 
 def Enquiry_put(request, pk,):
     try:
         enquiry = Enquiry.objects.get(pk=pk)
