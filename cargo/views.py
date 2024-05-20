@@ -106,14 +106,14 @@ def Enquiry_post(request):
     else:
         return JsonResponse({'error': 'Method not allowed'}, status=405)
 
-def Enquiry_get(request,pk):
-    try:
-        enquiry = Enquiry.objects.get(pk=pk)
-    except Enquiry.DoesNotExist:
-        return Response({'error': 'Enquiry not found'}, status=status.HTTP_404_NOT_FOUND)
+# def Enquiry_get(request,pk):
+#     try:
+#         enquiry = Enquiry.objects.get(pk=pk)
+#     except Enquiry.DoesNotExist:
+#         return Response({'error': 'Enquiry not found'}, status=status.HTTP_404_NOT_FOUND)
     
-    serializer = EnquirySerializer(enquiry)
-    return Response(serializer.data)
+#     serializer = EnquirySerializer(enquiry)
+#     return Response(serializer.data)
 
 @csrf_exempt
 def Enquiry_put(request, pk):
@@ -215,3 +215,20 @@ def enquiryList(request):
         data.append(enquiry_data)
 
     return JsonResponse({'data': data})
+
+
+@csrf_exempt
+def Enquiry_delete(request, pk):
+    if request.method == 'DELETE':
+        try:
+            enquiry = Enquiry.objects.get(pk=pk)
+        except Enquiry.DoesNotExist:
+            return JsonResponse({'error': 'Enquiry not found'}, status=404)
+
+        # Delete the Enquiry instance
+        enquiry.delete()
+
+        # Return a JSON response confirming deletion
+        return JsonResponse({'message': 'Enquiry deleted successfully'}, status=200)
+    else:
+        return JsonResponse({'error': 'Method not allowed'}, status=405)
