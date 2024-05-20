@@ -115,18 +115,71 @@ def Enquiry_get(request,pk):
     serializer = EnquirySerializer(enquiry)
     return Response(serializer.data)
 
-@csrf_exempt 
-def Enquiry_put(request, pk,):
-    try:
-        enquiry = Enquiry.objects.get(pk=pk)
-    except Enquiry.DoesNotExist:
-        return Response({'error': 'Enquiry not found'}, status=status.HTTP_404_NOT_FOUND)
-    
-    serializer = EnquirySerializer(enquiry, data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+@csrf_exempt
+def Enquiry_put(request, pk):
+    if request.method == 'PUT':
+        try:
+            enquiry = Enquiry.objects.get(pk=pk)
+        except Enquiry.DoesNotExist:
+            return JsonResponse({'error': 'Enquiry not found'}, status=404)
+
+        # Extract data from the request body
+        try:
+            data = json.loads(request.body)
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON'}, status=400)
+
+        # Check if required fields are present
+        required_fields = ['name', 'place']
+        for field in required_fields:
+            if field not in data:
+                return JsonResponse({'error': f'Required field "{field}" is missing'}, status=400)
+
+        # Parse data
+        name = data.get('name')
+        place = data.get('place')
+        pickup_date_str = data.get('pickup_date')
+        pickup_time = data.get('pickup_time')
+        phone = data.get('phone')
+        mode = data.get('mode')
+        driver = data.get('driver')
+        salesman_id = data.get('salesman_id')
+        status = data.get('status', 'pending')  # Default to 'pending' if not provided
+
+        # Validate pickup_date format
+        try:
+            pickup_date = pickup_date_str.split('T')[0]
+        except (ValueError, AttributeError):
+            return JsonResponse({'error': 'Invalid pickup_date format'}, status=400)
+
+        # Get salesman instance if salesman_id is provided
+        if salesman_id:
+            try:
+                salesman = CustomUser.objects.get(id=salesman_id)
+            except CustomUser.DoesNotExist:
+                return JsonResponse({'error': 'Salesman not found'}, status=404)
+        else:
+            salesman = None
+
+        # Update Enquiry instance fields
+        enquiry.name = name
+        enquiry.place = place
+        enquiry.pickup_date = pickup_date
+        enquiry.pickup_time = pickup_time
+        enquiry.phone = phone
+        enquiry.mode = mode
+        enquiry.driver = driver
+        enquiry.salesman = salesman
+        enquiry.status = status
+        enquiry.updated_at = timezone.now()
+
+        # Save the updated Enquiry instance
+        enquiry.save()
+
+        # Return a JSON response with the updated enquiry details
+        return JsonResponse({'message': 'Enquiry updated successfully', 'enquiry_id': enquiry.id}, status=200)
+    else:
+        return JsonResponse({'error': 'Method not allowed'}, status=405)
     
 
 def enquiryList(request):
