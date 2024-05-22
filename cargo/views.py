@@ -65,7 +65,10 @@ def Enquiry_post(request):
         phone = data.get('phone')
         mode = data.get('mode')
         driver = data.get('driver')
-        salesman_id = data.get('salesman_id')
+        salesman = data.get('salesman_id')
+        check = salesman.split('-')
+        salesman_id = check[0]
+        salesman_name = check[1]
         print(salesman_id,'--------------------this is salesman id---------------')
         status = data.get('status', 'pending')  # Default to 'pending' if not provided
 
@@ -93,6 +96,7 @@ def Enquiry_post(request):
             mode=mode,
             driver=driver,
             salesman=salesman,
+            salesman_name=salesman_name,
             status=status,
             created_at=timezone.now()
         )

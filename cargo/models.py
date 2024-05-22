@@ -23,6 +23,7 @@ class Enquiry(models.Model):
     mode = models.CharField(max_length=200,null=True)
     driver = models.CharField(max_length=100, blank=True, null=True)
     salesman = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,null=True)
+    salesman_name= models.CharField(max_length=100, blank=True, null=True)
     status = models.CharField(max_length=20, default='pending',null=True)
     created_at = models.DateTimeField(default=timezone.now,null=True)
 
