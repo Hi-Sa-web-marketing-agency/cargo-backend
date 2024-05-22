@@ -151,6 +151,7 @@ def Enquiry_put(request, pk):
         mode = data.get('mode')
         driver = data.get('driver')
         salesman = data.get('salesman', None)
+        print(salesman,'---------------------thgis salesman-----------------')
         if salesman is not None:
             check = salesman.split('-')
         else:
