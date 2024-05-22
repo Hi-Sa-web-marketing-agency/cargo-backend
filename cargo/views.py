@@ -65,7 +65,7 @@ def Enquiry_post(request):
         phone = data.get('phone')
         mode = data.get('mode')
         driver = data.get('driver')
-        salesman = data.get('salesman_id', None)
+        salesman = data.get('salesman', None)
         if salesman is not None:
             check = salesman.split('-')
         else:
