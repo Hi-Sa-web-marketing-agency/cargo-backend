@@ -150,7 +150,13 @@ def Enquiry_put(request, pk):
         phone = data.get('phone')
         mode = data.get('mode')
         driver = data.get('driver')
-        salesman_id = data.get('salesman_id')
+        salesman = data.get('salesman', None)
+        if salesman is not None:
+            check = salesman.split('-')
+        else:
+            pass
+        salesman_id = check[0]
+        salesman_name = check[1]
         status = data.get('status', 'pending')  # Default to 'pending' if not provided
 
         # Validate pickup_date format
@@ -177,6 +183,7 @@ def Enquiry_put(request, pk):
         enquiry.mode = mode
         enquiry.driver = driver
         enquiry.salesman = salesman
+        enquiry.salesman_name = salesman_name
         enquiry.status = status
         enquiry.updated_at = timezone.now()
 
