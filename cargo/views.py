@@ -65,8 +65,11 @@ def Enquiry_post(request):
         phone = data.get('phone')
         mode = data.get('mode')
         driver = data.get('driver')
-        salesman = data.get('salesman_id')
-        check = salesman.split('-')
+        salesman = data.get('salesman_id', None)
+        if salesman is not None:
+            check = salesman.split('-')
+        else:
+            pass
         salesman_id = check[0]
         salesman_name = check[1]
         print(salesman_id,'--------------------this is salesman id---------------')
