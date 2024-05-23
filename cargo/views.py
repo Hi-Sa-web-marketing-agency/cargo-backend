@@ -68,11 +68,15 @@ def Enquiry_post(request):
         salesman = data.get('salesman', None)
         if salesman is not None:
             check = salesman.split('-')
+            salesman_id = check[0]
+            salesman_name = check[1]
+            print(salesman_id,'--------------------this is salesman id---------------')
         else:
-            pass
-        salesman_id = check[0]
-        salesman_name = check[1]
-        print(salesman_id,'--------------------this is salesman id---------------')
+            check = None
+            salesman_id = None
+            salesman_name = None
+
+        
         status = data.get('status', 'pending')  # Default to 'pending' if not provided
 
         try:
